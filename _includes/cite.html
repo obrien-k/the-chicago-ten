@@ -1,0 +1,22 @@
+{%- comment -%}
+Render a source citation by id from _data/sources/.  Usage:
+  {% include cite.html id="some-slug" %}
+Shipped by DeadHonestCitation's `data` target; safe to edit/restyle.
+{%- endcomment -%}
+{%- assign s = site.data.sources[include.id] -%}
+{%- if s -%}
+<figure class="citation" id="cite-{{ include.id }}">
+  {%- if s.screenshot %}
+  <a href="{% if s.archive_url %}{{ s.archive_url }}{% else %}{{ s.source_url }}{% endif %}"><img src="{{ s.screenshot | relative_url }}" alt="{{ s.title | escape }}"></a>
+  {%- endif %}
+  <figcaption>
+    <strong>{{ s.title | escape }}</strong>
+    {%- if s.provenance == "archived" %} — <a href="{{ s.archive_url }}">archived {{ s.captured_at }}</a>
+    {%- elsif s.provenance == "live" %} — <a href="{{ s.source_url }}">live</a> (accessed {{ s.captured_at }})
+    {%- else %} — author's personal copy{% endif -%}
+    {%- if s.note and s.note != "" %}<br>{{ s.note }}{% endif -%}
+  </figcaption>
+</figure>
+{%- else -%}
+<!-- cite: '{{ include.id }}' not found in _data/sources -->
+{%- endif -%}
